@@ -12,6 +12,7 @@ on:
           - dev
           - uat
           - prod
+          - all
 
       action:
         description: "Terraform action"
@@ -46,14 +47,27 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Plan
-        if: ${{ inputs.action == 'plan' }}
-        run: terraform plan -var-file=${{ inputs.environment }}.tfvars
+      # -------- DEV --------
+      - name: Terraform DEV
+        if: ${{ inputs.environment == 'dev' || inputs.environment == 'all' }}
+        run: |
+          terraform ${{ inputs.action }} \
+          -auto-approve \
+          -var-file=dev.tfvars
 
-      - name: Terraform Apply
-        if: ${{ inputs.action == 'apply' }}
-        run: terraform apply -auto-approve -var-file=${{ inputs.environment }}.tfvars
+      # -------- UAT --------
+      - name: Terraform UAT
+        if: ${{ inputs.environment == 'uat' || inputs.environment == 'all' }}
+        run: |
+          terraform ${{ inputs.action }} \
+          -auto-approve \
+          -var-file=uat.tfvars
 
-      - name: Terraform Destroy
-        if: ${{ inputs.action == 'destroy' }}
-        run: terraform destroy -auto-approve -var-file=${{ inputs.environment }}.tfvars
+      # -------- PROD --------
+      - name: Terraform PROD
+        if: ${{ inputs.environment == 'prod' || inputs.environment == 'all' }}
+        run: |
+          terraform ${{ inputs.action }} \
+          -auto-approve \
+          -var-file=prod.tfvars
+
