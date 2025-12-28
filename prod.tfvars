@@ -16,7 +16,7 @@ asg_max_size = 6
 
 asg_desired_capacity = 3
 
-rds_instance_class = "db.t3.medium"
+rds_instance_class = "db.t3.micro"
 
 rds_username = "admin"
 
